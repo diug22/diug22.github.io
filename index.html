@@ -1,15 +1,46 @@
-<div id="lightning"></div>
+
+
+<html>
+
+<style>
+
+  a {
+    color: orange;
+  }
+
+</style>
+
 <script src="https://teladoc-service--joaquindev.sandbox.my.site.com/caseFormulary/lightning/lightning.out.js"></script>
-<script>
-    $Lightning.use("c:CaseFormularyOutSalesforce", function() {
-        $Lightning.createComponent("c:caseregister",
-            {},
-            "lightning",
-            function(cmp) {
-                console.log("LWC component was created");
-            }
-        );
-    },
-    'https://teladoc-service--joaquindev.sandbox.my.site.com/caseFormulary'
+
+<div data-lightning-out="true"></div>
+
+  <script>
+
+    const appName = 'c:CaseFormularyOutSalesforce';
+    const componentName = 'c:caseregister';
+    const lightningEndpoint = 'https://teladoc-service--joaquindev.sandbox.my.site.com/caseFormulary';
+    const targetElement = document.querySelector("[data-lightning-out]");
+    const componentAttributes = {
+
+    };
+
+    $Lightning.use(
+            appName,
+            function (){
+              $Lightning.createComponent(
+                      componentName,
+                      componentAttributes,
+                      targetElement,
+                      function (cmp){
+                        console.log('lightning component created');
+                      }
+              );
+            },
+            lightningEndpoint
     );
-</script>
+
+
+  </script>
+
+
+</html>
