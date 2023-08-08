@@ -9,11 +9,6 @@
 
   <script>
 
-    document.addEventListener('lightning__showtoast', event => {
-        console.log('TOAST');
-        sforce.one.showToast(event.toastAttributes);
-    });
-
     const appName = 'c:CaseFormularyOutSalesforce';
     const componentName = 'c:caseregister';
     const lightningEndpoint = 'https://teladoc-service--joaquindev.sandbox.my.site.com/caseFormulary';
