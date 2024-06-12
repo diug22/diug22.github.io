@@ -4,7 +4,7 @@ function uploadAudio() {
     var formData = new FormData();
     formData.append('audio', file);
 
-    fetch('https://09cb-139-47-125-37.ngrok-free.app/generate', {
+    fetch('https://c15a-139-47-125-37.ngrok-free.app/generate', {
         method: 'POST',
         body: formData,
         headers: {
