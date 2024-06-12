@@ -4,7 +4,7 @@ function uploadAudio() {
     var formData = new FormData();
     formData.append('audio', file);
 
-    fetch('http://139.47.125.37:5000/generate', {
+    fetch('https://139.47.125.37:5000/generate', {
         method: 'POST',
         body: formData,
         headers: {
