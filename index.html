@@ -3,19 +3,1297 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mi Aplicación de Audio y Video</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Mediterranean HealthWavers - Ejercicio Inteligente con IA</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tween.js/18.6.4/tween.umd.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, #0a1d35, #1e3c72);
+            color: white;
+            overflow-x: hidden;
+        }
+        
+        #wave-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100vh;
+            z-index: -1;
+        }
+        
+        .content {
+            position: relative;
+            z-index: 1;
+        }
+        
+        header {
+            padding: 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+            background-color: rgba(0, 0, 0, 0.3);
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo-icon {
+            margin-right: 10px;
+            font-size: 2rem;
+            color: #4dd0e1;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 2rem;
+        }
+        
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            color: #4dd0e1;
+        }
+        
+        .hero {
+            min-height: 80vh;
+            display: flex;
+            align-items: center;
+            padding: 0 4rem;
+        }
+        
+        .hero-content {
+            max-width: 600px;
+            backdrop-filter: blur(10px);
+            background-color: rgba(0, 0, 0, 0.3);
+            padding: 2rem;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
+        }
+        
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(to right, #4dd0e1, #00bcd4);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .subtitle {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            color: #e0f7fa;
+        }
+        
+        .btn {
+            display: inline-block;
+            background: linear-gradient(to right, #4dd0e1, #00838f);
+            color: white;
+            padding: 1rem 2rem;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 500;
+            margin-right: 1rem;
+            margin-bottom: 1rem;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .features {
+            padding: 6rem 4rem;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+        }
+        
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 4rem;
+            color: #4dd0e1;
+        }
+        
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        
+        .feature-card {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 2rem;
+            text-align: center;
+            transition: transform 0.3s;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: #4dd0e1;
+        }
+        
+        .feature-title {
+            font-size: 1.8rem;
+            margin-bottom: 1rem;
+            color: #e0f7fa;
+        }
+        
+        .demos {
+            padding: 6rem 4rem;
+        }
+        
+        .demo-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 4rem;
+            margin-top: 4rem;
+        }
+        
+        .demo-card {
+            background-color: rgba(0, 0, 0, 0.5);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.3);
+        }
+        
+        .demo-title {
+            padding: 1.5rem;
+            background-color: rgba(0, 131, 143, 0.8);
+            font-size: 1.5rem;
+            text-align: center;
+        }
+        
+        .demo-scene {
+            height: 400px;
+            position: relative;
+        }
+        
+        .demo-controls {
+            position: absolute;
+            bottom: 1rem;
+            left: 0;
+            right: 0;
+            text-align: center;
+            z-index: 10;
+        }
+        
+        .demo-btn {
+            background-color: rgba(0, 131, 143, 0.8);
+            color: white;
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            margin: 0 0.5rem;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .demo-btn:hover {
+            background-color: rgba(0, 188, 212, 0.8);
+        }
+        
+        .correction-indicator {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background-color: rgba(0, 188, 212, 0.8);
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            display: none;
+        }
+        
+        .correction-indicator.active {
+            display: block;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(0, 188, 212, 0.8);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(0, 188, 212, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(0, 188, 212, 0);
+            }
+        }
+        
+        .testimonials {
+            padding: 6rem 4rem;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(10px);
+        }
+        
+        .testimonial-container {
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+        
+        .testimonial {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        .testimonial-text {
+            font-size: 1.1rem;
+            font-style: italic;
+            margin-bottom: 1rem;
+        }
+        
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+        }
+        
+        .author-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background-color: #4dd0e1;
+            margin-right: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+        
+        .author-name {
+            font-weight: 700;
+        }
+        
+        .cta {
+            padding: 6rem 4rem;
+            text-align: center;
+            background: linear-gradient(to right, rgba(0, 131, 143, 0.8), rgba(0, 188, 212, 0.8));
+        }
+        
+        .cta-title {
+            font-size: 3rem;
+            margin-bottom: 2rem;
+            color: white;
+        }
+        
+        .cta-text {
+            font-size: 1.5rem;
+            margin-bottom: 2rem;
+            color: white;
+            max-width: 800px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        footer {
+            padding: 2rem 4rem;
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.9);
+        }
+        
+        .social-links {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+        
+        .social-link {
+            margin: 0 1rem;
+            color: white;
+            font-size: 1.5rem;
+            transition: color 0.3s;
+        }
+        
+        .social-link:hover {
+            color: #4dd0e1;
+        }
+        
+        @media (max-width: 768px) {
+            header {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            nav ul {
+                margin-top: 1rem;
+            }
+            
+            .hero {
+                padding: 2rem;
+            }
+            
+            .features, .demos, .testimonials, .cta {
+                padding: 4rem 2rem;
+            }
+            
+            .demo-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
 </head>
 <body>
-    <h1>Subir Audio</h1>
-    <input type="file" id="audioInput" accept="audio/*">
-    <button onclick="uploadAudio()">Subir Audio</button>
+    <div id="wave-container"></div>
     
-    <h1>Video Resultante</h1>
-    <video id="resultVideo" controls>
-        Tu navegador no soporta el elemento <code>video</code>.
-    </video>
-
-    <script src="script.js"></script>
+    <div class="content">
+        <header>
+            <a href="#" class="logo">
+                <span class="logo-icon">🌊</span>
+                <span>Mediterranean HealthWavers</span>
+            </a>
+            <nav>
+                <ul>
+                    <li><a href="#inicio">Inicio</a></li>
+                    <li><a href="#funciones">Funciones</a></li>
+                    <li><a href="#demos">Demos</a></li>
+                    <li><a href="#testimonios">Testimonios</a></li>
+                    <li><a href="#contacto">Contacto</a></li>
+                </ul>
+            </nav>
+        </header>
+        
+        <section id="inicio" class="hero">
+            <div class="hero-content">
+                <h1>Ejercicio Inteligente con IA</h1>
+                <p class="subtitle">Nuestra aplicación revoluciona tu entrenamiento con correcciones de postura en tiempo real y rutinas personalizadas que evolucionan contigo.</p>
+                <a href="#" class="btn">Descargar Ahora</a>
+                <a href="#demos" class="btn">Ver Demos</a>
+                <a href="#" class="btn">Prueba Gratuita</a>
+            </div>
+        </section>
+        
+        <section id="funciones" class="features">
+            <h2 class="section-title">Tecnología Avanzada</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">🤖</div>
+                    <h3 class="feature-title">IA Correctiva</h3>
+                    <p>Nuestra tecnología de inteligencia artificial analiza tu postura en tiempo real, detectando hasta los más mínimos errores para prevenir lesiones y maximizar resultados.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📊</div>
+                    <h3 class="feature-title">Análisis Biomecánico</h3>
+                    <p>Utilizamos sensores avanzados y algoritmos de aprendizaje profundo para crear un mapa 3D de tu cuerpo en movimiento, identificando áreas de mejora específicas.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🔄</div>
+                    <h3 class="feature-title">Rutinas Adaptativas</h3>
+                    <p>Ejercicios que evolucionan según tu progreso, condición física y objetivos, adaptándose dinámicamente incluso durante la sesión de entrenamiento.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">💬</div>
+                    <h3 class="feature-title">Feedback Instantáneo</h3>
+                    <p>Recibe indicaciones por voz y visuales mientras realizas tus ejercicios, con correcciones específicas para mejorar tu técnica en el momento.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">📱</div>
+                    <h3 class="feature-title">Seguimiento Multi-dispositivo</h3>
+                    <p>Accede a tu progreso desde cualquier dispositivo y continúa tu entrenamiento sin interrupciones, con sincronización instantánea en la nube.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon">🌊</div>
+                    <h3 class="feature-title">Filosofía Mediterránea</h3>
+                    <p>Incorporamos principios del estilo de vida mediterráneo con recomendaciones nutricionales, gestión del estrés y enfoque holístico en tu bienestar.</p>
+                </div>
+            </div>
+        </section>
+        
+        <section id="demos" class="demos">
+            <h2 class="section-title">Demos Interactivas</h2>
+            <div class="demo-container">
+                <div class="demo-card">
+                    <div class="demo-title">Corrección de Sentadillas</div>
+                    <div id="squat-demo" class="demo-scene">
+                        <div class="correction-indicator">Corrigiendo postura...</div>
+                        <div class="demo-controls">
+                            <button class="demo-btn" id="start-squat">Iniciar</button>
+                            <button class="demo-btn" id="toggle-correction">Activar IA</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="demo-card">
+                    <div class="demo-title">Análisis de Flexiones</div>
+                    <div id="pushup-demo" class="demo-scene">
+                        <div class="correction-indicator">Corrigiendo postura...</div>
+                        <div class="demo-controls">
+                            <button class="demo-btn" id="start-pushup">Iniciar</button>
+                            <button class="demo-btn" id="toggle-pushup-correction">Activar IA</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="testimonios" class="testimonials">
+            <h2 class="section-title">Usuarios Satisfechos</h2>
+            <div class="testimonial-container">
+                <div class="testimonial">
+                    <p class="testimonial-text">"La aplicación detectó inmediatamente que estaba haciendo mal las sentadillas. Después de seguir sus correcciones, mis dolores de rodilla desaparecieron por completo. ¡Increíble!"</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">👨</div>
+                        <div>
+                            <div class="author-name">Carlos Martínez</div>
+                            <div>34 años, Barcelona</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial">
+                    <p class="testimonial-text">"Como entrenadora personal, recomiendo Mediterranean HealthWavers a todos mis clientes. La tecnología de corrección de postura es superior a cualquier otra aplicación que haya probado."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">👩</div>
+                        <div>
+                            <div class="author-name">Elena Gómez</div>
+                            <div>Entrenadora Certificada, Madrid</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial">
+                    <p class="testimonial-text">"Después de una lesión de espalda, tenía miedo de volver a entrenar. Esta aplicación me dio la confianza para hacerlo correctamente, con ajustes personalizados a mi condición."</p>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">👴</div>
+                        <div>
+                            <div class="author-name">Roberto Sánchez</div>
+                            <div>58 años, Valencia</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="contacto" class="cta">
+            <h2 class="cta-title">Transforma tu Entrenamiento Hoy</h2>
+            <p class="cta-text">Únete a miles de personas que ya han mejorado su forma física, prevenido lesiones y alcanzado sus objetivos con Mediterranean HealthWavers.</p>
+            <a href="#" class="btn">Descargar Ahora</a>
+            <a href="#" class="btn">Ver Plan Premium</a>
+            <a href="#" class="btn">Contactar Soporte</a>
+        </section>
+        
+        <footer>
+            <div class="social-links">
+                <a href="#" class="social-link">Facebook</a>
+                <a href="#" class="social-link">Instagram</a>
+                <a href="#" class="social-link">Twitter</a>
+                <a href="#" class="social-link">YouTube</a>
+            </div>
+            <p>&copy; 2025 Mediterranean HealthWavers. Todos los derechos reservados.</p>
+        </footer>
+    </div>
+    
+    <script>
+        // Three.js - Configuración básica
+        let waveScene, waveCamera, waveRenderer;
+        let squatScene, squatCamera, squatRenderer, squatControls;
+        let pushupScene, pushupCamera, pushupRenderer, pushupControls;
+        
+        // Crear escena de olas
+        function setupWaveScene() {
+            waveScene = new THREE.Scene();
+            waveCamera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
+            waveRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+            waveRenderer.setSize(window.innerWidth, window.innerHeight);
+            waveRenderer.setPixelRatio(window.devicePixelRatio);
+            document.getElementById('wave-container').appendChild(waveRenderer.domElement);
+            
+            // Posición de la cámara
+            waveCamera.position.set(0, 20, 40);
+            waveCamera.lookAt(0, 0, 0);
+            
+            // Luces
+            const ambientLight = new THREE.AmbientLight(0x404040, 1);
+            waveScene.add(ambientLight);
+            
+            const directionalLight = new THREE.DirectionalLight(0xffffff, 1);
+            directionalLight.position.set(10, 20, 10);
+            waveScene.add(directionalLight);
+            
+            // Crear geometría para la ola
+            const waveSegments = 100;
+            const waveGeometry = new THREE.PlaneGeometry(100, 100, waveSegments, waveSegments);
+            
+            // Material con gradiente para el agua
+            const waveMaterial = new THREE.MeshStandardMaterial({
+                color: 0x00bcd4,
+                metalness: 0.9,
+                roughness: 0.1,
+                side: THREE.DoubleSide,
+                transparent: true,
+                opacity: 0.9,
+            });
+            
+            const wave = new THREE.Mesh(waveGeometry, waveMaterial);
+            wave.rotation.x = -Math.PI / 2;
+            wave.position.y = -10;
+            waveScene.add(wave);
+            
+            // Animación de olas
+            function animateWave() {
+                const positions = wave.geometry.attributes.position;
+                const time = Date.now() * 0.0005;
+                
+                for (let i = 0; i < positions.count; i++) {
+                    const x = positions.getX(i);
+                    const y = positions.getY(i);
+                    
+                    // Crear múltiples olas con diferentes amplitudes y frecuencias
+                    const waveX1 = 2.0 * Math.sin(x * 0.05 + time * 2);
+                    const waveX2 = 1.5 * Math.sin(y * 0.08 + time * 1.5);
+                    const waveY1 = 1.0 * Math.cos(x * 0.07 + time * 0.8);
+                    const waveY2 = 0.8 * Math.cos(y * 0.05 + time * 1.2);
+                    
+                    // Combinar todas las olas
+                    const combinedWave = waveX1 + waveX2 + waveY1 + waveY2;
+                    
+                    positions.setZ(i, combinedWave);
+                }
+                
+                positions.needsUpdate = true;
+            }
+            
+            // Añadir partículas de espuma
+            const particlesCount = 500;
+            const particlesGeometry = new THREE.BufferGeometry();
+            const particlesPositions = new Float32Array(particlesCount * 3);
+            
+            for (let i = 0; i < particlesCount * 3; i += 3) {
+                particlesPositions[i] = (Math.random() - 0.5) * 100;
+                particlesPositions[i + 1] = Math.random() * 5 - 5;
+                particlesPositions[i + 2] = (Math.random() - 0.5) * 100;
+            }
+            
+            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(particlesPositions, 3));
+            
+            const particlesMaterial = new THREE.PointsMaterial({
+                color: 0xffffff,
+                size: 0.2,
+                transparent: true,
+                opacity: 0.8,
+                blending: THREE.AdditiveBlending
+            });
+            
+            const particles = new THREE.Points(particlesGeometry, particlesMaterial);
+            waveScene.add(particles);
+            
+            // Función de animación
+            function animateWaveScene() {
+                requestAnimationFrame(animateWaveScene);
+                
+                animateWave();
+                
+                // Animar partículas
+                const particlePositions = particles.geometry.attributes.position;
+                const time = Date.now() * 0.001;
+                
+                for (let i = 0; i < particlePositions.count; i++) {
+                    const ix = i * 3;
+                    const x = particlePositions.array[ix];
+                    const y = particlePositions.array[ix + 1];
+                    const z = particlePositions.array[ix + 2];
+                    
+                    // Mover partículas en función de su posición y el tiempo
+                    particlePositions.array[ix] = x + Math.sin(time + x * 0.05) * 0.1;
+                    particlePositions.array[ix + 1] = y + Math.cos(time + z * 0.05) * 0.05;
+                    particlePositions.array[ix + 2] = z + Math.sin(time + y * 0.05) * 0.1;
+                    
+                    // Resetear partículas que se alejan demasiado
+                    if (Math.abs(x) > 50 || Math.abs(z) > 50 || y > 5) {
+                        particlePositions.array[ix] = (Math.random() - 0.5) * 100;
+                        particlePositions.array[ix + 1] = Math.random() * 5 - 5;
+                        particlePositions.array[ix + 2] = (Math.random() - 0.5) * 100;
+                    }
+                }
+                
+                particlePositions.needsUpdate = true;
+                
+                waveRenderer.render(waveScene, waveCamera);
+            }
+            
+            animateWaveScene();
+            
+            // Responsive
+            window.addEventListener('resize', () => {
+                waveCamera.aspect = window.innerWidth / window.innerHeight;
+                waveCamera.updateProjectionMatrix();
+                waveRenderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        }
+        
+        // Función para crear un modelo humano para ejercicios
+        function createHumanModel(color = 0x00bcd4) {
+            const humanGroup = new THREE.Group();
+            
+            // Cabeza
+            const head = new THREE.Mesh(
+                new THREE.SphereGeometry(0.7, 32, 32),
+                new THREE.MeshStandardMaterial({ color: color })
+            );
+            head.position.y = 5.7;
+            humanGroup.add(head);
+            
+            // Torso
+            const torso = new THREE.Mesh(
+                new THREE.CylinderGeometry(1, 0.8, 3, 32),
+                new THREE.MeshStandardMaterial({ color: color })
+            );
+            torso.position.y = 3.5;
+            humanGroup.add(torso);
+            
+            // Cintura
+            const waist = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.9, 0.9, 0.5, 32),
+                new THREE.MeshStandardMaterial({ color: color })
+            );
+            waist.position.y = 1.75;
+            humanGroup.add(waist);
+            
+            // Brazos
+            const upperLeftArm = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.3, 0.25, 1.5, 32),
+                new THREE.MeshStandardMaterial({ color: color })
+            );
+            upperLeftArm.position.set(-1.3, 4, 0);
+            upperLeftArm.rotation.z = -Math.PI / 8;
+            humanGroup.add(upperLeftArm);
+            
+            const lowerLeftArm = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.25, 0.2, 1.5, 32),
+                new THREE.MeshStandardMaterial({ color: color })
+            );
+            lowerLeftArm.position.set(-1.6, 3, 0);
+            lowerLeftArm.rotation.z = -Math.PI / 4;
+            humanGroup.add(lowerLeftArm);
+            
+            const upperRightArm = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.3, 0.25, 1.5, 32),
+                new THREE.MeshStandardMaterial({ color: color })
+            );
+            upperRightArm.position.set(1.3, 4, 0);
+            upperRightArm.rotation.z = Math.PI / 8;
+            humanGroup.add(upperRightArm);
+            
+            const lowerRightArm = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.25, 0.2, 1.5, 32),
+                new THREE.MeshStandardMaterial({ color: color })
+            );
+            lowerRightArm.position.set(1.6, 3, 0);
+            lowerRightArm.rotation.z = Math.PI / 4;
+            humanGroup.add(lowerRightArm);
+            
+            // Piernas
+            const upperLeftLeg = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.4, 0.35, 2, 32),
+                new THREE.MeshStandardMaterial({ color: color })
+            );
+            upperLeftLeg.position.set(-0.6, 0.5, 0);
+            humanGroup.add(upperLeftLeg);
+            
+            const lowerLeftLeg = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.35, 0.3, 2, 32),
+                new THREE.MeshStandardMaterial({ color: color })
+            );
+            lowerLeftLeg.position.set(-0.6, -1.5, 0);
+            humanGroup.add(lowerLeftLeg);
+            
+            const upperRightLeg = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.4, 0.35, 2, 32),
+                new THREE.MeshStandardMaterial({ color: color })
+            );
+            upperRightLeg.position.set(0.6, 0.5, 0);
+            humanGroup.add(upperRightLeg);
+            
+            const lowerRightLeg = new THREE.Mesh(
+                new THREE.CylinderGeometry(0.35, 0.3, 2, 32),
+                new THREE.MeshStandardMaterial({ color: color })
+            );
+            lowerRightLeg.position.set(0.6, -1.5, 0);
+            humanGroup.add(lowerRightLeg);
+            
+            // Pies
+            const leftFoot = new THREE.Mesh(
+                new THREE.BoxGeometry(0.5, 0.3, 1),
+                new THREE.MeshStandardMaterial({ color: color })
+            );
+            leftFoot.position.set(-0.6, -2.65, 0.2);
+            humanGroup.add(leftFoot);
+            
+            const rightFoot = new THREE.Mesh(
+                new THREE.BoxGeometry(0.5, 0.3, 1),
+                new THREE.MeshStandardMaterial({ color: color })
+            );
+            rightFoot.position.set(0.6, -2.65, 0.2);
+            humanGroup.add(rightFoot);
+            
+            // Referencias para animación
+            humanGroup.userData = {
+                head: head,
+                torso: torso,
+                waist: waist,
+                upperLeftArm: upperLeftArm,
+                lowerLeftArm: lowerLeftArm,
+                upperRightArm: upperRightArm,
+                lowerRightArm: lowerRightArm,
+                upperLeftLeg: upperLeftLeg,
+                lowerLeftLeg: lowerLeftLeg,
+                upperRightLeg: upperRightLeg,
+                lowerRightLeg: lowerRightLeg,
+                leftFoot: leftFoot,
+                rightFoot: rightFoot
+            };
+            
+            return humanGroup;
+        }
+        
+        // Configurar escena de sentadillas
+        function setupSquatScene() {
+            squatScene = new THREE.Scene();
+            squatScene.background = new THREE.Color(0x0a1d35);
+            
+            squatCamera = new THREE.PerspectiveCamera(60, 1, 0.1, 1000);
+            const squatContainer = document.getElementById('squat-demo');
+            const width = squatContainer.clientWidth;
+            const height = squatContainer.clientHeight;
+            
+            squatRenderer = new THREE.WebGLRenderer({ antialias: true });
+            squatRenderer.setSize(width, height);
+            squatContainer.appendChild(squatRenderer.domElement);
+            
+            // Añadir OrbitControls
+            squatControls = new THREE.OrbitControls(squatCamera, squatRenderer.domElement);
+            squatControls.enableDamping = true;
+            squatControls.dampingFactor = 0.05;
+            squatControls.screenSpacePanning = false;
+            squatControls.minDistance = 5;
+            squatControls.maxDistance = 20;
+            
+            // Posición de cámara
+            squatCamera.position.set(0, 0, 10);
+            squatControls.target.set(0, 0, 0);
+            
+            // Luces
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            squatScene.add(ambientLight);
+            
+            const mainLight = new THREE.DirectionalLight(0xffffff, 1);
+            mainLight.position.set(10, 10, 10);
+            squatScene.add(mainLight);
+            
+            const backLight = new THREE.DirectionalLight(0x0088ff, 0.5);
+            backLight.position.set(-10, 5, -10);
+            squatScene.add(backLight);
+            
+            // Crear suelo
+            const floor = new THREE.Mesh(
+                new THREE.PlaneGeometry(20, 20),
+                new THREE.MeshStandardMaterial({ 
+                    color: 0x333333,
+                    roughness: 0.8
+                })
+            );
+            floor.rotation.x = -Math.PI / 2;
+            floor.position.y = -2.8;
+            squatScene.add(floor);
+            
+            // Crear grid de referencia
+            const grid = new THREE.GridHelper(20, 20, 0x555555, 0x333333);
+            grid.position.y = -2.79;
+            squatScene.add(grid);
+            
+            // Crear modelo humano
+            const human = createHumanModel(0x00bcd4);
+            human.position.y = 2.8;
+            squatScene.add(human);
+            
+            // Crear modelo con mala postura
+            const badPostureHuman = createHumanModel(0xff5252);
+            badPostureHuman.position.set(-4, 2.8, 0);
+            squatScene.add(badPostureHuman);
+            
+            // Añadir líneas guía para corrección
+            const guidelineMaterial = new THREE.LineBasicMaterial({ 
+                color: 0xffffff, 
+                transparent: true, 
+                opacity: 0.5,
+                linewidth: 2
+            });
+            
+            // Línea vertical para modelo correcto
+            const correctPoints = [];
+            correctPoints.push(new THREE.Vector3(0, -2.8, 0));
+            correctPoints.push(new THREE.Vector3(0, 8, 0));
+            
+            const correctLineGeometry = new THREE.BufferGeometry().setFromPoints(correctPoints);
+            const correctLine = new THREE.Line(correctLineGeometry, guidelineMaterial);
+            squatScene.add(correctLine);
+            
+            // Línea para modelo incorrecto
+            const incorrectPoints = [];
+            incorrectPoints.push(new THREE.Vector3(-4, -2.8, 0));
+            incorrectPoints.push(new THREE.Vector3(-4, 8, 0));
+            
+            const incorrectLineGeometry = new THREE.BufferGeometry().setFromPoints(incorrectPoints);
+            const incorrectLine = new THREE.Line(incorrectLineGeometry, guidelineMaterial);
+            squatScene.add(incorrectLine);
+            
+            // Variables para animación
+            let isSquatting = false;
+            let squatPhase = 0;
+            let squatSpeed = 0.02;
+            let correctionActive = false;
+            
+            // Botones de control
+            document.getElementById('start-squat').addEventListener('click', () => {
+                isSquatting = !isSquatting;
+                document.getElementById('start-squat').textContent = 
+                    isSquatting ? 'Parar' : 'Iniciar';
+            });
+            
+            document.getElementById('toggle-correction').addEventListener('click', () => {
+                correctionActive = !correctionActive;
+                document.getElementById('toggle-correction').textContent = 
+                    correctionActive ? 'Desactivar IA' : 'Activar IA';
+                
+                const indicator = document.querySelector('#squat-demo .correction-indicator');
+                if (correctionActive) {
+                    indicator.classList.add('active');
+                    indicator.textContent = "Corrigiendo postura...";
+                } else {
+                    indicator.classList.remove('active');
+                }
+            });
+            
+            // Función de animación de sentadillas
+            function animateSquat() {
+                requestAnimationFrame(animateSquat);
+                
+                if (isSquatting) {
+                    // Actualizar fase de sentadilla
+                    squatPhase += squatSpeed;
+                    if (squatPhase > 1 || squatPhase < 0) {
+                        squatSpeed = -squatSpeed;
+                    }
+                    
+                    // Modelo correcto
+                    const squat = Math.sin(squatPhase * Math.PI);
+                    
+                    // Posición buena (bajada controlada)
+                    human.position.y = 2.8 - squat * 1.5;
+                    
+                    // Animar piernas para sentadilla correcta
+                    human.userData.upperLeftLeg.rotation.x = squat * Math.PI / 3;
+                    human.userData.upperRightLeg.rotation.x = squat * Math.PI / 3;
+                    human.userData.lowerLeftLeg.rotation.x = squat * Math.PI / 2;
+                    human.userData.lowerRightLeg.rotation.x = squat * Math.PI / 2;
+                    
+                    // Posición mala (espalda inclinada, rodillas hacia dentro)
+                    badPostureHuman.position.y = 2.8 - squat * 1.5;
+                    
+                    // Mala postura - inclinación frontal
+                    badPostureHuman.rotation.x = squat * Math.PI / 10;
+                    
+                    // Mala postura - rodillas hacia dentro
+                    badPostureHuman.userData.upperLeftLeg.rotation.z = squat * Math.PI / 10;
+                    badPostureHuman.userData.upperRightLeg.rotation.z = -squat * Math.PI / 10;
+                    
+                    badPostureHuman.userData.upperLeftLeg.rotation.x = squat * Math.PI / 3;
+                    badPostureHuman.userData.upperRightLeg.rotation.x = squat * Math.PI / 3;
+                    badPostureHuman.userData.lowerLeftLeg.rotation.x = squat * Math.PI / 2;
+                    badPostureHuman.userData.lowerRightLeg.rotation.x = squat * Math.PI / 2;
+                    
+                    // Corrección con IA
+                    if (correctionActive && squat > 0.5) {
+                        // Animación de corrección gradual
+                        badPostureHuman.rotation.x *= 0.95;
+                        badPostureHuman.userData.upperLeftLeg.rotation.z *= 0.95;
+                        badPostureHuman.userData.upperRightLeg.rotation.z *= 0.95;
+                        
+                        // Actualizar texto de corrección
+                        const indicator = document.querySelector('#squat-demo .correction-indicator');
+                        indicator.textContent = "Corrigiendo: Espalda recta, rodillas alineadas";
+                    }
+                }
+                
+                squatControls.update();
+                squatRenderer.render(squatScene, squatCamera);
+            }
+            
+            animateSquat();
+            
+            // Responsive
+            window.addEventListener('resize', () => {
+                const width = squatContainer.clientWidth;
+                const height = squatContainer.clientHeight;
+                
+                squatCamera.aspect = width / height;
+                squatCamera.updateProjectionMatrix();
+                squatRenderer.setSize(width, height);
+            });
+        }
+        
+        // Configurar escena de flexiones
+        function setupPushupScene() {
+            pushupScene = new THREE.Scene();
+            pushupScene.background = new THREE.Color(0x0a1d35);
+            
+            pushupCamera = new THREE.PerspectiveCamera(60, 1, 0.1, 1000);
+            const pushupContainer = document.getElementById('pushup-demo');
+            const width = pushupContainer.clientWidth;
+            const height = pushupContainer.clientHeight;
+            
+            pushupRenderer = new THREE.WebGLRenderer({ antialias: true });
+            pushupRenderer.setSize(width, height);
+            pushupContainer.appendChild(pushupRenderer.domElement);
+            
+            // Añadir OrbitControls
+            pushupControls = new THREE.OrbitControls(pushupCamera, pushupRenderer.domElement);
+            pushupControls.enableDamping = true;
+            pushupControls.dampingFactor = 0.05;
+            pushupControls.screenSpacePanning = false;
+            pushupControls.minDistance = 5;
+            pushupControls.maxDistance = 20;
+            
+            // Posición de cámara
+            pushupCamera.position.set(8, 3, 8);
+            pushupControls.target.set(0, 0, 0);
+            
+            // Luces
+            const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
+            pushupScene.add(ambientLight);
+            
+            const mainLight = new THREE.DirectionalLight(0xffffff, 1);
+            mainLight.position.set(10, 10, 10);
+            pushupScene.add(mainLight);
+            
+            const backLight = new THREE.DirectionalLight(0x0088ff, 0.5);
+            backLight.position.set(-10, 5, -10);
+            pushupScene.add(backLight);
+            
+            // Crear suelo
+            const floor = new THREE.Mesh(
+                new THREE.PlaneGeometry(20, 20),
+                new THREE.MeshStandardMaterial({ 
+                    color: 0x333333,
+                    roughness: 0.8
+                })
+            );
+            floor.rotation.x = -Math.PI / 2;
+            floor.position.y = -0.3;
+            pushupScene.add(floor);
+            
+            // Crear grid de referencia
+            const grid = new THREE.GridHelper(20, 20, 0x555555, 0x333333);
+            grid.position.y = -0.29;
+            pushupScene.add(grid);
+            
+            // Crear modelo humano en posición de flexiones
+            function createPushupModel(color) {
+                const model = new THREE.Group();
+                
+                // Cabeza
+                const head = new THREE.Mesh(
+                    new THREE.SphereGeometry(0.7, 32, 32),
+                    new THREE.MeshStandardMaterial({ color: color })
+                );
+                head.position.y = 2;
+                head.position.z = -3;
+                model.add(head);
+                
+                // Torso
+                const torso = new THREE.Mesh(
+                    new THREE.CylinderGeometry(0.7, 0.9, 3, 32),
+                    new THREE.MeshStandardMaterial({ color: color })
+                );
+                torso.position.y = 1.5;
+                torso.position.z = -1;
+                torso.rotation.x = Math.PI / 2;
+                model.add(torso);
+                
+                // Brazos
+                const upperLeftArm = new THREE.Mesh(
+                    new THREE.CylinderGeometry(0.3, 0.25, 1.5, 32),
+                    new THREE.MeshStandardMaterial({ color: color })
+                );
+                upperLeftArm.position.set(-1, 0, 0);
+                upperLeftArm.rotation.z = -Math.PI / 2;
+                model.add(upperLeftArm);
+                
+                const lowerLeftArm = new THREE.Mesh(
+                    new THREE.CylinderGeometry(0.25, 0.2, 1.5, 32),
+                    new THREE.MeshStandardMaterial({ color: color })
+                );
+                lowerLeftArm.position.set(-1, 0, 1.2);
+                lowerLeftArm.rotation.x = -Math.PI / 2;
+                model.add(lowerLeftArm);
+                
+                const upperRightArm = new THREE.Mesh(
+                    new THREE.CylinderGeometry(0.3, 0.25, 1.5, 32),
+                    new THREE.MeshStandardMaterial({ color: color })
+                );
+                upperRightArm.position.set(1, 0, 0);
+                upperRightArm.rotation.z = Math.PI / 2;
+                model.add(upperRightArm);
+                
+                const lowerRightArm = new THREE.Mesh(
+                    new THREE.CylinderGeometry(0.25, 0.2, 1.5, 32),
+                    new THREE.MeshStandardMaterial({ color: color })
+                );
+                lowerRightArm.position.set(1, 0, 1.2);
+                lowerRightArm.rotation.x = -Math.PI / 2;
+                model.add(lowerRightArm);
+                
+                // Piernas
+                const upperLeftLeg = new THREE.Mesh(
+                    new THREE.CylinderGeometry(0.4, 0.35, 2, 32),
+                    new THREE.MeshStandardMaterial({ color: color })
+                );
+                upperLeftLeg.position.set(-0.6, 0, -2);
+                upperLeftLeg.rotation.x = Math.PI / 2;
+                model.add(upperLeftLeg);
+                
+                const lowerLeftLeg = new THREE.Mesh(
+                    new THREE.CylinderGeometry(0.35, 0.3, 2, 32),
+                    new THREE.MeshStandardMaterial({ color: color })
+                );
+                lowerLeftLeg.position.set(-0.6, 0, -4);
+                lowerLeftLeg.rotation.x = Math.PI / 2;
+                model.add(lowerLeftLeg);
+                
+                const upperRightLeg = new THREE.Mesh(
+                    new THREE.CylinderGeometry(0.4, 0.35, 2, 32),
+                    new THREE.MeshStandardMaterial({ color: color })
+                );
+                upperRightLeg.position.set(0.6, 0, -2);
+                upperRightLeg.rotation.x = Math.PI / 2;
+                model.add(upperRightLeg);
+                
+                const lowerRightLeg = new THREE.Mesh(
+                    new THREE.CylinderGeometry(0.35, 0.3, 2, 32),
+                    new THREE.MeshStandardMaterial({ color: color })
+                );
+                lowerRightLeg.position.set(0.6, 0, -4);
+                lowerRightLeg.rotation.x = Math.PI / 2;
+                model.add(lowerRightLeg);
+                
+                // Pies
+                const leftFoot = new THREE.Mesh(
+                    new THREE.BoxGeometry(0.5, 0.3, 1),
+                    new THREE.MeshStandardMaterial({ color: color })
+                );
+                leftFoot.position.set(-0.6, 0.15, -5);
+                model.add(leftFoot);
+                
+                const rightFoot = new THREE.Mesh(
+                    new THREE.BoxGeometry(0.5, 0.3, 1),
+                    new THREE.MeshStandardMaterial({ color: color })
+                );
+                rightFoot.position.set(0.6, 0.15, -5);
+                model.add(rightFoot);
+                
+                // Referencias para animación
+                model.userData = {
+                    head: head,
+                    torso: torso,
+                    upperLeftArm: upperLeftArm,
+                    lowerLeftArm: lowerLeftArm,
+                    upperRightArm: upperRightArm,
+                    lowerRightArm: lowerRightArm,
+                    upperLeftLeg: upperLeftLeg,
+                    lowerLeftLeg: lowerLeftLeg,
+                    upperRightLeg: upperRightLeg,
+                    lowerRightLeg: lowerRightLeg
+                };
+                
+                return model;
+            }
+            
+            // Añadir modelos
+            const correctPushupModel = createPushupModel(0x00bcd4);
+            pushupScene.add(correctPushupModel);
+            
+            const incorrectPushupModel = createPushupModel(0xff5252);
+            incorrectPushupModel.position.x = -5;
+            pushupScene.add(incorrectPushupModel);
+            
+            // Variables para animación
+            let isPushingUp = false;
+            let pushupPhase = 0;
+            let pushupSpeed = 0.02;
+            let pushupCorrectionActive = false;
+            
+            // Botones de control
+            document.getElementById('start-pushup').addEventListener('click', () => {
+                isPushingUp = !isPushingUp;
+                document.getElementById('start-pushup').textContent = 
+                    isPushingUp ? 'Parar' : 'Iniciar';
+            });
+            
+            document.getElementById('toggle-pushup-correction').addEventListener('click', () => {
+                pushupCorrectionActive = !pushupCorrectionActive;
+                document.getElementById('toggle-pushup-correction').textContent = 
+                    pushupCorrectionActive ? 'Desactivar IA' : 'Activar IA';
+                
+                const indicator = document.querySelector('#pushup-demo .correction-indicator');
+                if (pushupCorrectionActive) {
+                    indicator.classList.add('active');
+                    indicator.textContent = "Corrigiendo postura...";
+                } else {
+                    indicator.classList.remove('active');
+                }
+            });
+            
+            // Función de animación de flexiones
+            function animatePushups() {
+                requestAnimationFrame(animatePushups);
+                
+                if (isPushingUp) {
+                    // Actualizar fase de flexión
+                    pushupPhase += pushupSpeed;
+                    if (pushupPhase > 1 || pushupPhase < 0) {
+                        pushupSpeed = -pushupSpeed;
+                    }
+                    
+                    const pushup = Math.sin(pushupPhase * Math.PI);
+                    
+                    // Modelo correcto
+                    correctPushupModel.position.y = 0.5 * (1 - pushup);
+                    correctPushupModel.userData.upperLeftArm.rotation.x = -pushup * Math.PI / 3;
+                    correctPushupModel.userData.upperRightArm.rotation.x = -pushup * Math.PI / 3;
+                    
+                    // Modelo incorrecto (caderas altas, espalda arqueada)
+                    incorrectPushupModel.position.y = 0.5 * (1 - pushup);
+                    incorrectPushupModel.userData.upperLeftArm.rotation.x = -pushup * Math.PI / 3;
+                    incorrectPushupModel.userData.upperRightArm.rotation.x = -pushup * Math.PI / 3;
+                    
+                    // Mala postura - caderas elevadas
+                    incorrectPushupModel.userData.torso.rotation.x = Math.PI / 2 - pushup * Math.PI / 6;
+                    // Mala postura - cuello hacia abajo
+                    incorrectPushupModel.userData.head.rotation.x = -pushup * Math.PI / 6;
+                    
+                    // Corrección con IA
+                    if (pushupCorrectionActive && pushup > 0.3) {
+                        // Animación de corrección gradual
+                        incorrectPushupModel.userData.torso.rotation.x = lerp(
+                            incorrectPushupModel.userData.torso.rotation.x,
+                            Math.PI / 2,
+                            0.05
+                        );
+                        incorrectPushupModel.userData.head.rotation.x = lerp(
+                            incorrectPushupModel.userData.head.rotation.x,
+                            0,
+                            0.05
+                        );
+                        
+                        // Actualizar texto de corrección
+                        const indicator = document.querySelector('#pushup-demo .correction-indicator');
+                        indicator.textContent = "Corrigiendo: Espalda recta, cuello alineado";
+                    }
+                }
+                
+                pushupControls.update();
+                pushupRenderer.render(pushupScene, pushupCamera);
+            }
+            
+            // Función de interpolación
+            function lerp(start, end, t) {
+                return start * (1 - t) + end * t;
+            }
+            
+            animatePushups();
+            
+            // Responsive
+            window.addEventListener('resize', () => {
+                const width = pushupContainer.clientWidth;
+                const height = pushupContainer.clientHeight;
+                
+                pushupCamera.aspect = width / height;
+                pushupCamera.updateProjectionMatrix();
+                pushupRenderer.setSize(width, height);
+            });
+        }
+        
+        // Inicializar escenas
+        document.addEventListener('DOMContentLoaded', () => {
+            // Aplicar Three.js y OrbitControls
+            const OrbitControls = function(object, domElement) {
+                this.object = object;
+                this.domElement = domElement;
+                
+                // Propiedades
+                this.enabled = true;
+                this.target = new THREE.Vector3();
+                this.enableDamping = false;
+                this.dampingFactor = 0.05;
+                this.screenSpacePanning = false;
+                this.minDistance = 0;
+                this.maxDistance = Infinity;
+                this.minZoom = 0;
+                this.maxZoom = Infinity;
+                
+                // Estado interno
+                this.position0 = new THREE.Vector3();
+                this.target0 = new THREE.Vector3();
+                this.zoom0 = this.object.zoom;
+                this.lastPosition = new THREE.Vector3();
+                this.lastQuaternion = new THREE.Quaternion();
+                
+                // Métodos
+                this.update = function() {
+                    // Aquí colocaríamos la lógica de actualización
+                    return true;
+                };
+                
+                this.reset = function() {
+                    this.target.copy(this.target0);
+                    this.object.position.copy(this.position0);
+                    this.object.zoom = this.zoom0;
+                    this.object.updateProjectionMatrix();
+                    return this;
+                };
+                
+                // Configuración inicial
+                this.position0.copy(this.object.position);
+                this.target0.copy(this.target);
+                this.zoom0 = this.object.zoom;
+            };
+            
+            THREE.OrbitControls = OrbitControls;
+            
+            setupWaveScene();
+            setupSquatScene();
+            setupPushupScene();
+        });
+    </script>
 </body>
 </html>
